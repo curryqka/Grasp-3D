@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# Environments
+.env
+.venv/
+venv/
+
+# Tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Experiment artifacts (keep the repo code-only; large outputs live outside)
+runs/
+outputs/
+*.pth
+*.pt
+*.ckpt
+*.h5
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
