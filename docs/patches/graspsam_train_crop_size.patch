@@ -1,0 +1,39 @@
+--- software/GraspSAM/train.py	2026-11-02 08:16:15.003875206 -0800
++++ Experiment/s2_closedloop/GraspSAM_local/train.py	2026-11-03 09:37:48.605733930 -0800
+@@ -173,10 +173,10 @@
+                                        start=0.9, end=1.0, seen=False, train=False)
+     
+     elif args.dataset_name == "grasp_anything":
+-        train_dataset = GraspAnythingDataset(root=args.root, include_mask=True, 
++        train_dataset = GraspAnythingDataset(root=args.root, crop_size=1024, include_mask=True,
+                                              random_rotate=False, random_zoom=False,
+                                              start=0.0, end=0.9, seen=args.seen, train=True)
+-        test_dataset = GraspAnythingDataset(root=args.root, include_mask=True, 
++        test_dataset = GraspAnythingDataset(root=args.root, crop_size=1024, include_mask=True,
+                                             random_rotate=False, random_zoom=False,
+                                             start=0.9, end=1.0, seen=False, train=False)
+             
+@@ -199,7 +199,14 @@
+     parameters = [p for p in model.parameters() if p.requires_grad]
+     optimizer = torch.optim.AdamW(parameters, lr=args.lr)
+     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, 20, 1e-7)
+-    
++
++    if getattr(args, "seed", None) is not None:
++        import random as _random
++        _random.seed(args.seed)
++        np.random.seed(args.seed)
++        torch.manual_seed(args.seed)
++        torch.cuda.manual_seed_all(args.seed)
++
+     start_epoch = 0
+     
+     if args.resume_ckp:
+@@ -288,6 +295,7 @@
+     parser.add_argument("--print-freq", type=int, default=50)
+     
+     parser.add_argument("--save", action='store_true')
++    parser.add_argument("--seed", type=int, default=None, help="random seed for multi-seed runs")
+     parser.add_argument("--save-dir", type=str, default="final_result")
+     parser.add_argument("--resume-ckp", type=str, default=None)
+ 
