@@ -15,6 +15,18 @@ keypoint_det.py --test（11-12 补丁路径，.orig 备份，训练路径零接�
 未现场景泛化差距显著（训练末段 batch loss 0.3-0.5）；尾段过拟合回撤与
 GraspSAM lr1e-4 线"峰值在中段"形态同构。
 
+## stage-1 复现线 run_1108（seed717，同配方 20ep）完结 val（11-12 16:2x）
+
+| ckpt | val loss (focal/ct) | 对照主线 run_1030 |
+|---|---|---|
+| model_best | **1.6822** | 主线 best 2.3277（低 28%） |
+| model_last（ep20） | 3.3289 | 主线 last 3.0032（高 11%） |
+
+复现结论：stage-1 泛化峰值点随种子漂移大（best 两线差 0.65）；「best 显著优于
+last」的尾段过拟合形态两线一致（主线回撤 29% / 复现回撤 50%），lr1e-4「峰值在
+中段」形态获得 stage-1 独立佐证；末 epoch 跳过 epoch-end val 系作者设计（两线
+同形态，model_best 均停在中段）。
+
 ## stage-2 四线 30ep 终测（depth_width_angle_reg.py --test，model_last=ep30）
 
 695 帧 / 22,240 抓取；depth/width 单位 mm，angle 单位 deg。
